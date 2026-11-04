@@ -3,56 +3,17 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const app = express();
-const configuredFrontendOrigins = [
-  process.env.FRONTEND_URL,
-  process.env.FRONTEND_URLS,
-]
-  .filter(Boolean)
-  .flatMap((value) => value.split(','))
-  .map((value) => {
-    try {
-      return new URL(value.trim()).origin;
-    } catch {
-      return null;
-    }
-  })
-  .filter(Boolean);
-const allowedOrigins = new Set([
-  'https://eduportal-lms.vercel.app',
-  ...configuredFrontendOrigins,
-]);
-
-const isLocalOrigin = (origin) => {
-  try {
-    const url = new URL(origin);
-    const host = url.hostname.replace(/^\[|\]$/g, '');
-    const isPrivateIpv4 =
-      /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host) ||
-      /^192\.168\.\d{1,3}\.\d{1,3}$/.test(host) ||
-      /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(host) ||
-      /^169\.254\.\d{1,3}\.\d{1,3}$/.test(host);
-
-    return url.protocol === 'http:' && (
-      host === 'localhost' ||
-      host === '127.0.0.1' ||
-      host === '0.0.0.0' ||
-      host === '::1' ||
-      isPrivateIpv4
-    );
-  } catch {
-    return false;
-  }
-};
 
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.has(origin) || isLocalOrigin(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error(`Origin ${origin} is not allowed by CORS`));
-  },
+  origin: [
+    'http://localhost:8081',
+    'http://localhost:19006',
+    'http://localhost:3000',
+    'http://192.168.1.0/24', // local network for expo go
+    'https://eduportal-lms.vercel.app',
+  ],
   credentials: true,
 }));
 
