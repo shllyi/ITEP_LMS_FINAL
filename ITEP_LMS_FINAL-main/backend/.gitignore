@@ -1,8 +1,0 @@
-# local env files
-.env*.local
-
-# dependencies
-node_modules/
-
-/config/.env
-node_modules/
