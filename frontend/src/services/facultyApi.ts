@@ -6,7 +6,6 @@ import {
   WaygroundQuiz,
   EnrolledStudent,
 } from '@/types/faculty';
-import { API_BASE } from './api';
 
 export interface SubjectProgressReport {
   subject: { id: string; name: string; code: string; academicYear?: string; semester?: string; yearLevel?: string; professorName?: string; professorEmail?: string };
@@ -36,6 +35,8 @@ export interface SubjectProgressReport {
     }>;
   }>;
 }
+
+const API_BASE = `${process.env.EXPO_PUBLIC_API_URL}/api`;
 
 const getHeaders = (token?: string | null) => ({
   'Content-Type': 'application/json',
